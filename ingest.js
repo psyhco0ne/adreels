@@ -36,13 +36,13 @@ function apifyInputsFromQueries() {
   const country = process.env.APIFY_COUNTRY || "US";
   const media = process.env.APIFY_MEDIA || "video";
   const limit = +(process.env.APIFY_LIMIT || 60);
-  const all = (process.env.APIFY_QUERIES || "vaginal dryness,urinary incontinence,menopause").split(",").map((q) => q.trim()).filter(Boolean);
-  // With a long keyword list, scrape only a slice per run and rotate every 12 hours.
+  const all = (process.env.APIFY_QUERIES || "vaginal dryness,urinary incontinence,menopause,hot flashes,UTI,bladder leakage").split(",").map((q) => q.trim()).filter(Boolean);
+  // With a long keyword list, scrape only a slice per run and rotate daily.
   // Re-scraping the same top ads costs money and adds nothing new.
   const perRun = Math.max(1, +(process.env.APIFY_PER_RUN || 3));
   let queries = all;
   if (all.length > perRun) {
-    const slot = Math.floor(Date.now() / (12 * 3600e3));
+    const slot = Math.floor(Date.now() / (24 * 3600e3));
     queries = Array.from({ length: perRun }, (_, i) => all[(slot * perRun + i) % all.length]);
   }
   const actor = process.env.APIFY_ACTOR || "";

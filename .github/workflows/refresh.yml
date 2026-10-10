@@ -26,7 +26,7 @@ jobs:
       APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
       APIFY_ACTOR: ${{ vars.APIFY_ACTOR }}
       APIFY_INPUT: ${{ vars.APIFY_INPUT }}
-      APIFY_QUERIES: ${{ vars.APIFY_QUERIES || 'vaginal dryness,urinary incontinence,menopause' }}
+      APIFY_QUERIES: ${{ vars.APIFY_QUERIES || 'vaginal dryness,urinary incontinence,menopause,hot flashes,UTI,bladder leakage' }}
       APIFY_COUNTRY: ${{ vars.APIFY_COUNTRY }}
       APIFY_LIMIT: ${{ vars.APIFY_LIMIT }}
       APIFY_PER_RUN: ${{ vars.APIFY_PER_RUN }}

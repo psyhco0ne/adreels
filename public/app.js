@@ -5,7 +5,7 @@ const empty = document.getElementById("empty");
 const hint = document.getElementById("hint");
 const panel = document.getElementById("panel");
 
-const state = { hideSeen: true, minScore: 70, minDays: 14, format: "all", q: "", offset: 0, total: 0, loading: false, muted: true };
+const state = { hideSeen: true, showExpired: true, minScore: 70, minDays: 14, format: "all", q: "", offset: 0, total: 0, loading: false, muted: true };
 let saved;
 try { saved = new Set(JSON.parse(localStorage.getItem("adreels.saved") || "[]")); } catch { saved = new Set(); }
 // Ads you have actually looked at (2s on screen). Stored per device in this browser.
@@ -51,10 +51,29 @@ function scoreRing(score) {
   return svg;
 }
 
+// Facebook video links are signed and stop working about 4-5 days after they were scraped.
+// The expiry time is inside the link itself (the "oe" value, hex unix seconds).
+function videoGone(ad) {
+  const m = ad.videoUrl && ad.videoUrl.match(/[?&]oe=([0-9a-f]+)/i);
+  return !!m && parseInt(m[1], 16) * 1000 < Date.now() + 3600e3;
+}
+
+function expiredCard(ad) {
+  let h = 0;
+  for (const c of ad.pageName || "x") h = (h * 31 + c.charCodeAt(0)) % 360;
+  return el("div", { class: "fallback", style: { background: `radial-gradient(120% 80% at 20% 0%, hsl(${h} 45% 28% / .6), transparent 60%), hsl(${h} 30% 10%)` } },
+    el("span", { class: "tag", style: { color: `hsl(${h} 70% 75%)` } }, "Video link expired"),
+    el("div", { class: "big" }, ad.headline || (ad.text || "").slice(0, 90)),
+    el("a", { class: "cta", href: ad.libraryUrl, target: "_blank", rel: "noopener noreferrer", style: { alignSelf: "flex-start" } }, "Watch in Ad Library ↗")
+  );
+}
+
 function mediaFor(ad) {
+  if (ad.videoUrl && videoGone(ad)) return expiredCard(ad);
   if (ad.videoUrl) {
     const v = el("video", { src: ad.videoUrl, poster: ad.posterUrl || null, loop: true, playsinline: true, preload: "metadata" });
     v.muted = state.muted;
+    v.addEventListener("error", () => { const box = v.parentElement; if (box) box.replaceChildren(expiredCard(ad)); }, { once: true });
     return v;
   }
   if (ad.imageUrl) return el("img", { src: ad.imageUrl, alt: "", loading: "lazy" });
@@ -133,13 +152,16 @@ async function getAds(p) {
     const res = await fetch(`api/ads?${p}`);
     if (res.ok && (res.headers.get("content-type") || "").includes("json")) return await res.json();
   } catch {}
-  staticAds ??= await (await fetch("ads.json", { cache: "no-cache" })).json();
+  staticAds ??= await (await fetch(`ads.json?t=${Date.now()}`, { cache: "no-store" })).json();
   const q = Object.fromEntries(p);
   let ranked = rankAds(staticAds.ads, { minScore: +q.minScore, minDays: +q.minDays });
   if (q.format === "video") ranked = ranked.filter((a) => a.mediaType === "VIDEO");
   if (q.format === "image") ranked = ranked.filter((a) => a.mediaType === "IMAGE");
   const unseenTotal = ranked.filter((a) => !seen.has(a.id)).length;
   if (state.hideSeen) ranked = ranked.filter((a) => !seen.has(a.id));
+  // Playable videos first; ads whose video link expired go to the end (or are hidden).
+  const live = ranked.filter((a) => !videoGone(a));
+  ranked = state.showExpired ? [...live, ...ranked.filter(videoGone)] : live;
   const t = (q.q || "").toLowerCase();
   if (t) ranked = ranked.filter((a) => [a.pageName, a.headline, a.text, a.vertical].join(" ").toLowerCase().includes(t));
   const off = +q.offset || 0, lim = +q.limit || 10;
@@ -178,6 +200,7 @@ document.getElementById("apply").onclick = () => {
   state.minDays = +document.getElementById("minDays").value || 0;
   state.q = document.getElementById("q").value.trim();
   state.hideSeen = document.getElementById("hideSeen").checked;
+  state.showExpired = document.getElementById("showExpired").checked;
   panel.hidden = true; load(true);
 };
 document.getElementById("resetSeen").onclick = () => {
