@@ -1,0 +1,385 @@
+[
+  {
+    "id": "1100000000000000",
+    "pageId": "5000000",
+    "pageName": "Lumen & Oak",
+    "vertical": "Sleep",
+    "headline": "Why do you wake up at 3am? It might not be stress.",
+    "text": "Magnesium glycinate + L-theanine, built for the 3am wake-up. 30-night guarantee.",
+    "cta": "Shop Now",
+    "landingUrl": "lumenoak.example",
+    "mediaType": "VIDEO",
+    "videoUrl": null,
+    "imageUrl": null,
+    "startedDaysAgo": 212,
+    "ranDays": 212,
+    "active": true,
+    "platforms": [
+      "facebook",
+      "instagram",
+      "messenger"
+    ],
+    "variants": 14,
+    "euReach": 2400000,
+    "countries": [
+      "EE",
+      "DE",
+      "FR"
+    ],
+    "palette": [
+      "#1b2a49",
+      "#6c8cff"
+    ],
+    "demo": true
+  },
+  {
+    "id": "1100000000007919",
+    "pageId": "5000001",
+    "pageName": "Nordic Root",
+    "vertical": "Collagen",
+    "headline": "She stopped buying creams after this",
+    "text": "Marine collagen + vitamin C. The skin routine that starts from the inside.",
+    "cta": "Learn More",
+    "landingUrl": "nordicroot.example",
+    "mediaType": "VIDEO",
+    "videoUrl": null,
+    "imageUrl": null,
+    "startedDaysAgo": 148,
+    "ranDays": 148,
+    "active": true,
+    "platforms": [
+      "facebook",
+      "instagram"
+    ],
+    "variants": 9,
+    "euReach": 980000,
+    "countries": [
+      "EE",
+      "DE",
+      "FR"
+    ],
+    "palette": [
+      "#3a1f2b",
+      "#ff8fa3"
+    ],
+    "demo": true
+  },
+  {
+    "id": "1100000000015838",
+    "pageId": "5000002",
+    "pageName": "Brightside Pet Co.",
+    "vertical": "Pets",
+    "headline": "My vet asked what I changed. Honestly? One thing.",
+    "text": "Joint chews dogs actually eat. Over 40,000 five-star reviews.",
+    "cta": "Shop Now",
+    "landingUrl": "brightsidepetco.example",
+    "mediaType": "VIDEO",
+    "videoUrl": null,
+    "imageUrl": null,
+    "startedDaysAgo": 96,
+    "ranDays": 96,
+    "active": true,
+    "platforms": [
+      "facebook",
+      "instagram",
+      "audience_network"
+    ],
+    "variants": 7,
+    "euReach": 610000,
+    "countries": [
+      "EE",
+      "DE",
+      "FR"
+    ],
+    "palette": [
+      "#223a2a",
+      "#9be37d"
+    ],
+    "demo": true
+  },
+  {
+    "id": "1100000000023757",
+    "pageId": "5000003",
+    "pageName": "Kettle & Kin",
+    "vertical": "Coffee",
+    "headline": "The 4-minute coffee ritual that replaced my 3pm slump",
+    "text": "Mushroom coffee with lion’s mane. First bag 40% off.",
+    "cta": "Order Now",
+    "landingUrl": "kettlekin.example",
+    "mediaType": "IMAGE",
+    "videoUrl": null,
+    "imageUrl": null,
+    "startedDaysAgo": 63,
+    "ranDays": 63,
+    "active": true,
+    "platforms": [
+      "facebook",
+      "instagram"
+    ],
+    "variants": 5,
+    "euReach": 240000,
+    "countries": [
+      "EE",
+      "DE",
+      "FR"
+    ],
+    "palette": [
+      "#3b2a1a",
+      "#ffb86b"
+    ],
+    "demo": true
+  },
+  {
+    "id": "1100000000031676",
+    "pageId": "5000004",
+    "pageName": "Verdant Labs",
+    "vertical": "Skincare",
+    "headline": "Dermatologists hate how simple this is",
+    "text": "One serum. Three ingredients. Zero filler.",
+    "cta": "Shop Now",
+    "landingUrl": "verdantlabs.example",
+    "mediaType": "VIDEO",
+    "videoUrl": null,
+    "imageUrl": null,
+    "startedDaysAgo": 41,
+    "ranDays": 41,
+    "active": true,
+    "platforms": [
+      "instagram"
+    ],
+    "variants": 4,
+    "euReach": 150000,
+    "countries": [
+      "EE",
+      "DE",
+      "FR"
+    ],
+    "palette": [
+      "#1f3b3a",
+      "#6fe3d6"
+    ],
+    "demo": true
+  },
+  {
+    "id": "1100000000039595",
+    "pageId": "5000005",
+    "pageName": "Halcyon Home",
+    "vertical": "Home",
+    "headline": "The $29 fix for a noisy, drafty window",
+    "text": "Peel-and-stick seal that works in 5 minutes.",
+    "cta": "Learn More",
+    "landingUrl": "halcyonhome.example",
+    "mediaType": "VIDEO",
+    "videoUrl": null,
+    "imageUrl": null,
+    "startedDaysAgo": 33,
+    "ranDays": 33,
+    "active": true,
+    "platforms": [
+      "facebook",
+      "instagram"
+    ],
+    "variants": 6,
+    "euReach": null,
+    "countries": [
+      "EE",
+      "DE",
+      "FR"
+    ],
+    "palette": [
+      "#2b2b3b",
+      "#b6a8ff"
+    ],
+    "demo": true
+  },
+  {
+    "id": "1100000000047514",
+    "pageId": "5000006",
+    "pageName": "PeakForm",
+    "vertical": "Fitness",
+    "headline": "Do this 8-minute routine before you check your phone",
+    "text": "Guided mobility app. 7-day free trial.",
+    "cta": "Install Now",
+    "landingUrl": "peakform.example",
+    "mediaType": "VIDEO",
+    "videoUrl": null,
+    "imageUrl": null,
+    "startedDaysAgo": 19,
+    "ranDays": 19,
+    "active": true,
+    "platforms": [
+      "facebook",
+      "instagram"
+    ],
+    "variants": 2,
+    "euReach": 38000,
+    "countries": [
+      "EE",
+      "DE",
+      "FR"
+    ],
+    "palette": [
+      "#3a2020",
+      "#ff7a6b"
+    ],
+    "demo": true
+  },
+  {
+    "id": "1100000000055433",
+    "pageId": "5000007",
+    "pageName": "Gleam Daily",
+    "vertical": "Oral care",
+    "headline": "Whiter in 7 days or it’s free",
+    "text": "Enamel-safe whitening strips.",
+    "cta": "Shop Now",
+    "landingUrl": "gleamdaily.example",
+    "mediaType": "IMAGE",
+    "videoUrl": null,
+    "imageUrl": null,
+    "startedDaysAgo": 11,
+    "ranDays": 11,
+    "active": true,
+    "platforms": [
+      "facebook"
+    ],
+    "variants": 1,
+    "euReach": 9000,
+    "countries": [
+      "EE",
+      "DE",
+      "FR"
+    ],
+    "palette": [
+      "#26303a",
+      "#7fd0ff"
+    ],
+    "demo": true
+  },
+  {
+    "id": "1100000000063352",
+    "pageId": "5000008",
+    "pageName": "Tidy Tides",
+    "vertical": "Cleaning",
+    "headline": "Black Friday pre-sale starts NOW",
+    "text": "Eco laundry sheets, 50% off sitewide this weekend only.",
+    "cta": "Shop Now",
+    "landingUrl": "tidytides.example",
+    "mediaType": "IMAGE",
+    "videoUrl": null,
+    "imageUrl": null,
+    "startedDaysAgo": 4,
+    "ranDays": 4,
+    "active": true,
+    "platforms": [
+      "facebook"
+    ],
+    "variants": 1,
+    "euReach": null,
+    "countries": [
+      "EE",
+      "DE",
+      "FR"
+    ],
+    "palette": [
+      "#2a3a30",
+      "#8ff0b0"
+    ],
+    "demo": true
+  },
+  {
+    "id": "1100000000071271",
+    "pageId": "5000009",
+    "pageName": "Moss & Marrow",
+    "vertical": "Broth",
+    "headline": "The soup your grandmother would approve of",
+    "text": "Slow-simmered bone broth, shipped frozen.",
+    "cta": "Order Now",
+    "landingUrl": "mossmarrow.example",
+    "mediaType": "VIDEO",
+    "videoUrl": null,
+    "imageUrl": null,
+    "startedDaysAgo": 201,
+    "ranDays": 187,
+    "active": false,
+    "platforms": [
+      "facebook",
+      "instagram"
+    ],
+    "variants": 6,
+    "euReach": 420000,
+    "countries": [
+      "EE",
+      "DE",
+      "FR"
+    ],
+    "palette": [
+      "#3a2f1f",
+      "#f2c879"
+    ],
+    "demo": true
+  },
+  {
+    "id": "1100000000079190",
+    "pageId": "5000010",
+    "pageName": "Aurora Desk",
+    "vertical": "Office",
+    "headline": "Standing desk flash sale ends tonight",
+    "text": "Last chance. Seriously this time.",
+    "cta": "Shop Now",
+    "landingUrl": "auroradesk.example",
+    "mediaType": "IMAGE",
+    "videoUrl": null,
+    "imageUrl": null,
+    "startedDaysAgo": 17,
+    "ranDays": 3,
+    "active": false,
+    "platforms": [
+      "facebook"
+    ],
+    "variants": 1,
+    "euReach": 2000,
+    "countries": [
+      "EE",
+      "DE",
+      "FR"
+    ],
+    "palette": [
+      "#252a3a",
+      "#9fb4ff"
+    ],
+    "demo": true
+  },
+  {
+    "id": "1100000000087109",
+    "pageId": "5000011",
+    "pageName": "Luma Skin Studio",
+    "vertical": "Beauty",
+    "headline": "Tried every cream. This is the one that stuck.",
+    "text": "Peptide night cream, 60-day money-back guarantee.",
+    "cta": "Shop Now",
+    "landingUrl": "lumaskinstudio.example",
+    "mediaType": "VIDEO",
+    "videoUrl": null,
+    "imageUrl": null,
+    "startedDaysAgo": 77,
+    "ranDays": 77,
+    "active": true,
+    "platforms": [
+      "facebook",
+      "instagram",
+      "messenger"
+    ],
+    "variants": 11,
+    "euReach": 730000,
+    "countries": [
+      "EE",
+      "DE",
+      "FR"
+    ],
+    "palette": [
+      "#3b2036",
+      "#ff9ed8"
+    ],
+    "demo": true
+  }
+]

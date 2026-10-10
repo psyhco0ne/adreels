@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>AdReels</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="stage">
+    <div class="phone">
+      <header class="topbar">
+        <div class="brand">Ad<span>Reels</span></div>
+        <div class="chips" id="tier" role="tablist" aria-label="Winner strength">
+          <button class="chip on" data-min="60">Winners</button>
+          <button class="chip" data-min="75">Strong</button>
+          <button class="chip" data-min="88">Elite</button>
+        </div>
+        <button class="icon-btn" id="filterBtn" aria-label="Filters">⚙</button>
+      </header>
+
+      <div class="panel" id="panel" hidden>
+        <label>Format
+          <select id="format">
+            <option value="all">All</option>
+            <option value="video">Video only</option>
+            <option value="image">Static only</option>
+          </select>
+        </label>
+        <label>Min days running
+          <input type="number" id="minDays" value="14" min="0" max="365">
+        </label>
+        <label>Search
+          <input type="search" id="q" placeholder="brand, niche, hook…">
+        </label>
+        <button class="apply" id="apply">Apply</button>
+      </div>
+
+      <main class="feed" id="feed" tabindex="0" aria-label="Winning ads feed"></main>
+
+      <div class="empty" id="empty" hidden>
+        <p>No ads clear that bar.</p>
+        <small>Lower the tier or the minimum days.</small>
+      </div>
+      <div class="hint" id="hint">Swipe or ↑ ↓ · M to mute</div>
+    </div>
+
+    <aside class="note">
+      <h2>How "winning" is decided</h2>
+      <p>Meta doesn't publish spend or ROAS for commercial ads. AdReels scores survival instead: advertisers
+        don't keep paying for losers. Days running carries the most weight, then live variants and
+        EU/UK reach when Meta discloses it.</p>
+      <p id="srcLine" class="muted"></p>
+    </aside>
+  </div>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

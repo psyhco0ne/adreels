@@ -1,0 +1,10 @@
+{
+  "name": "adreels",
+  "version": "0.1.0",
+  "description": "TikTok-style vertical feed of winning ads from the Meta Ad Library",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "ingest": "node ingest.js"
+  }
+}
