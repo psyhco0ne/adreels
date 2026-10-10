@@ -139,7 +139,9 @@ function toggleSound() {
   if (!state.muted) {
     const vis = [...feed.querySelectorAll(".slide")].find((s) => { const r = s.getBoundingClientRect(); return r.top > -r.height / 2 && r.top < r.height / 2; });
     const v = vis && vis.querySelector("video");
-    if (v) v.play().catch(() => { setMuted(true); });
+    // A playing video just needs muted=false inside this tap. Only touch play() if it is paused,
+    // and never flip back to muted on a harmless rejection (that made the button look dead).
+    if (v && v.paused) v.play().catch((err) => { if (err && err.name === "NotAllowedError") setMuted(true); });
   }
 }
 muteBtn.addEventListener("click", toggleSound);
@@ -158,7 +160,9 @@ const io = new IntersectionObserver((entries) => {
     if (onScreen) {
       v.muted = state.muted;
       // iOS blocks unmuted autoplay unless it follows a tap; fall back to muted and show it.
-      v.play().catch(() => { v.muted = true; setMuted(true); v.play().catch(() => {}); });
+      v.play().catch((err) => {
+        if (err && err.name === "NotAllowedError") { v.muted = true; setMuted(true); v.play().catch(() => {}); }
+      });
     }
     else v.pause();
   }
