@@ -15,6 +15,15 @@ import { fromDemo, fromGraph, fromApify } from "./lib/sources.js";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(here, "data", "ads.json");
 
+// Surface failures as a GitHub Actions annotation so they show on the run summary page.
+for (const ev of ["uncaughtException", "unhandledRejection"])
+  process.on(ev, (e) => {
+    const msg = String(e?.message || e).replace(/\r?\n/g, " ").slice(0, 600);
+    console.log(`::error title=Ingest failed::${msg}`);
+    console.error(e);
+    process.exit(1);
+  });
+
 const args = Object.fromEntries(
   process.argv.slice(2).reduce((acc, a, i, all) => {
     if (a.startsWith("--")) acc.push([a.slice(2), all[i + 1]?.startsWith("--") ? true : all[i + 1] ?? true]);

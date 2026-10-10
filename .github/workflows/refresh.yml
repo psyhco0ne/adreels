@@ -36,6 +36,7 @@ jobs:
           node-version: 22
 
       - name: Ingest from Meta Ad Library API
+        continue-on-error: true
         if: env.META_TOKEN != ''
         env:
           AD_QUERIES: ${{ vars.AD_QUERIES }}
@@ -47,6 +48,7 @@ jobs:
           done
 
       - name: Ingest from Apify scraper
+        continue-on-error: true
         if: env.APIFY_TOKEN != ''
         env:
           APIFY_ACTOR: ${{ vars.APIFY_ACTOR || 'curious_coder~facebook-ads-library-scraper' }}
