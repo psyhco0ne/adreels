@@ -127,6 +127,24 @@ function slide(ad) {
   );
 }
 
+const muteBtn = document.getElementById("muteBtn");
+function setMuted(m) {
+  state.muted = m;
+  muteBtn.textContent = m ? "🔇" : "🔊";
+  feed.querySelectorAll("video").forEach((v) => (v.muted = m));
+}
+// Must run inside the tap itself: iOS only allows sound when play() follows a user gesture.
+function toggleSound() {
+  setMuted(!state.muted);
+  if (!state.muted) {
+    const vis = [...feed.querySelectorAll(".slide")].find((s) => { const r = s.getBoundingClientRect(); return r.top > -r.height / 2 && r.top < r.height / 2; });
+    const v = vis && vis.querySelector("video");
+    if (v) v.play().catch(() => { setMuted(true); });
+  }
+}
+muteBtn.addEventListener("click", toggleSound);
+feed.addEventListener("click", (e) => { if (e.target.tagName === "VIDEO") toggleSound(); });
+
 // play only the visible video
 const io = new IntersectionObserver((entries) => {
   for (const e of entries) {
@@ -137,7 +155,11 @@ const io = new IntersectionObserver((entries) => {
     if (!onScreen && seenTimers.has(id)) { clearTimeout(seenTimers.get(id)); seenTimers.delete(id); }
     const v = e.target.querySelector("video");
     if (!v) continue;
-    if (onScreen) v.play().catch(() => {});
+    if (onScreen) {
+      v.muted = state.muted;
+      // iOS blocks unmuted autoplay unless it follows a tap; fall back to muted and show it.
+      v.play().catch(() => { v.muted = true; setMuted(true); v.play().catch(() => {}); });
+    }
     else v.pause();
   }
   const last = feed.lastElementChild;
@@ -154,6 +176,8 @@ async function getAds(p) {
   } catch {}
   staticAds ??= await (await fetch(`ads.json?t=${Date.now()}`, { cache: "no-store" })).json();
   const q = Object.fromEntries(p);
+  // Catalog ads carry unfilled "{{product.name}}" templates; drop those so real copy shows instead.
+  for (const a of staticAds.ads) if (/\{\{.*\}\}/.test(a.headline || "")) a.headline = "";
   let ranked = rankAds(staticAds.ads, { minScore: +q.minScore, minDays: +q.minDays });
   if (q.format === "video") ranked = ranked.filter((a) => a.mediaType === "VIDEO");
   if (q.format === "image") ranked = ranked.filter((a) => a.mediaType === "IMAGE");
@@ -211,8 +235,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowDown" || e.key === "j") feed.scrollBy({ top: feed.clientHeight, behavior: "smooth" });
   if (e.key === "ArrowUp" || e.key === "k") feed.scrollBy({ top: -feed.clientHeight, behavior: "smooth" });
   if (e.key.toLowerCase() === "m") {
-    state.muted = !state.muted;
-    feed.querySelectorAll("video").forEach((v) => (v.muted = state.muted));
+    toggleSound();
   }
 });
 feed.addEventListener("scroll", () => hint.classList.add("gone"), { once: true });
