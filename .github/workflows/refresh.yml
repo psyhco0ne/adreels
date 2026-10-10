@@ -4,8 +4,7 @@ name: Refresh ads and deploy
 
 on:
   schedule:
-    - cron: "17 4 * * *" # 07:17 Tallinn
-    - cron: "17 16 * * *" # 19:17 Tallinn
+    - cron: "17 4 * * *" # daily, 07:17 Tallinn
   workflow_dispatch: # "Run workflow" button in the Actions tab
   push:
     branches: [main]
@@ -27,7 +26,7 @@ jobs:
       APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
       APIFY_ACTOR: ${{ vars.APIFY_ACTOR }}
       APIFY_INPUT: ${{ vars.APIFY_INPUT }}
-      APIFY_QUERIES: ${{ vars.APIFY_QUERIES }}
+      APIFY_QUERIES: ${{ vars.APIFY_QUERIES || 'vaginal dryness,urinary incontinence,menopause' }}
       APIFY_COUNTRY: ${{ vars.APIFY_COUNTRY }}
       APIFY_LIMIT: ${{ vars.APIFY_LIMIT }}
       APIFY_PER_RUN: ${{ vars.APIFY_PER_RUN }}

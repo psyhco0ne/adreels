@@ -36,7 +36,7 @@ function apifyInputsFromQueries() {
   const country = process.env.APIFY_COUNTRY || "US";
   const media = process.env.APIFY_MEDIA || "video";
   const limit = +(process.env.APIFY_LIMIT || 60);
-  const all = (process.env.APIFY_QUERIES || "sleep,collagen,skincare").split(",").map((q) => q.trim()).filter(Boolean);
+  const all = (process.env.APIFY_QUERIES || "vaginal dryness,urinary incontinence,menopause").split(",").map((q) => q.trim()).filter(Boolean);
   // With a long keyword list, scrape only a slice per run and rotate every 12 hours.
   // Re-scraping the same top ads costs money and adds nothing new.
   const perRun = Math.max(1, +(process.env.APIFY_PER_RUN || 3));
