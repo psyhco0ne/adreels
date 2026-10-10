@@ -37,7 +37,7 @@ jobs:
 
       - name: Ingest from Meta Ad Library API
         continue-on-error: true
-        if: env.META_TOKEN != ''
+        if: github.event_name != 'push' && env.META_TOKEN != ''
         env:
           AD_QUERIES: ${{ vars.AD_QUERIES }}
           AD_COUNTRIES: ${{ vars.AD_COUNTRIES }}
@@ -49,7 +49,7 @@ jobs:
 
       - name: Ingest from Apify scraper
         continue-on-error: true
-        if: env.APIFY_TOKEN != ''
+        if: github.event_name != 'push' && env.APIFY_TOKEN != ''
         env:
           APIFY_ACTOR: ${{ vars.APIFY_ACTOR || 'curious_coder~facebook-ads-library-scraper' }}
         run: node ingest.js --source apify

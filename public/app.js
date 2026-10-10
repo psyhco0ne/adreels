@@ -5,7 +5,7 @@ const empty = document.getElementById("empty");
 const hint = document.getElementById("hint");
 const panel = document.getElementById("panel");
 
-const state = { minScore: 60, minDays: 14, format: "all", q: "", offset: 0, total: 0, loading: false, muted: true };
+const state = { minScore: 70, minDays: 14, format: "all", q: "", offset: 0, total: 0, loading: false, muted: true };
 let saved;
 try { saved = new Set(JSON.parse(localStorage.getItem("adreels.saved") || "[]")); } catch { saved = new Set(); }
 
