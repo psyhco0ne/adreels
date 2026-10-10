@@ -45,7 +45,7 @@ function apifyInputFromQueries() {
   if (actor.startsWith("apify~") || actor.startsWith("apify/"))
     return { startUrls: urls.map((url) => ({ url })), resultsLimit: limit };
   return {
-    urls,
+    urls: urls.map((url) => ({ url })), // this actor wants request objects, not bare strings
     limitPerSource: limit,
     scrapePageAds: { activeStatus: "active", sortBy: "impressions_desc", countryCode: country },
   };
