@@ -5,9 +5,14 @@ const empty = document.getElementById("empty");
 const hint = document.getElementById("hint");
 const panel = document.getElementById("panel");
 
-const state = { minScore: 70, minDays: 14, format: "all", q: "", offset: 0, total: 0, loading: false, muted: true };
+const state = { hideSeen: true, minScore: 70, minDays: 14, format: "all", q: "", offset: 0, total: 0, loading: false, muted: true };
 let saved;
 try { saved = new Set(JSON.parse(localStorage.getItem("adreels.saved") || "[]")); } catch { saved = new Set(); }
+// Ads you have actually looked at (2s on screen). Stored per device in this browser.
+let seen;
+try { seen = new Set(JSON.parse(localStorage.getItem("adreels.seen") || "[]")); } catch { seen = new Set(); }
+const saveSeen = () => { try { localStorage.setItem("adreels.seen", JSON.stringify([...seen].slice(-5000))); } catch {} };
+const seenTimers = new Map();
 
 const el = (tag, props = {}, ...kids) => {
   const n = document.createElement(tag);
@@ -106,9 +111,14 @@ function slide(ad) {
 // play only the visible video
 const io = new IntersectionObserver((entries) => {
   for (const e of entries) {
+    const id = e.target.dataset.id;
+    const onScreen = e.isIntersecting && e.intersectionRatio > 0.6;
+    if (onScreen && id && !seen.has(id) && !seenTimers.has(id))
+      seenTimers.set(id, setTimeout(() => { seen.add(id); saveSeen(); seenTimers.delete(id); }, 2000));
+    if (!onScreen && seenTimers.has(id)) { clearTimeout(seenTimers.get(id)); seenTimers.delete(id); }
     const v = e.target.querySelector("video");
     if (!v) continue;
-    if (e.isIntersecting && e.intersectionRatio > 0.6) v.play().catch(() => {});
+    if (onScreen) v.play().catch(() => {});
     else v.pause();
   }
   const last = feed.lastElementChild;
@@ -120,7 +130,7 @@ const io = new IntersectionObserver((entries) => {
 let staticAds = null;
 async function getAds(p) {
   try {
-    const res = await fetch(`/api/ads?${p}`);
+    const res = await fetch(`api/ads?${p}`);
     if (res.ok && (res.headers.get("content-type") || "").includes("json")) return await res.json();
   } catch {}
   staticAds ??= await (await fetch("ads.json", { cache: "no-cache" })).json();
@@ -128,11 +138,13 @@ async function getAds(p) {
   let ranked = rankAds(staticAds.ads, { minScore: +q.minScore, minDays: +q.minDays });
   if (q.format === "video") ranked = ranked.filter((a) => a.mediaType === "VIDEO");
   if (q.format === "image") ranked = ranked.filter((a) => a.mediaType === "IMAGE");
+  const unseenTotal = ranked.filter((a) => !seen.has(a.id)).length;
+  if (state.hideSeen) ranked = ranked.filter((a) => !seen.has(a.id));
   const t = (q.q || "").toLowerCase();
   if (t) ranked = ranked.filter((a) => [a.pageName, a.headline, a.text, a.vertical].join(" ").toLowerCase().includes(t));
   const off = +q.offset || 0, lim = +q.limit || 10;
   const when = staticAds.builtAt ? `, updated ${new Date(staticAds.builtAt).toLocaleDateString()}` : "";
-  return { source: `${staticAds.source}${when}`, total: ranked.length, scanned: staticAds.ads.length, ads: ranked.slice(off, off + lim) };
+  return { source: `${staticAds.source}${when}`, total: ranked.length, scanned: staticAds.ads.length, unseenTotal, ads: ranked.slice(off, off + lim) };
 }
 
 async function load(reset = false) {
@@ -146,8 +158,11 @@ async function load(reset = false) {
   state.offset += data.ads.length;
   for (const ad of data.ads) { const s = slide(ad); feed.append(s); io.observe(s); }
   empty.hidden = feed.children.length > 0;
+  const allSeen = !feed.children.length && state.hideSeen && (data.unseenTotal === 0);
+  document.getElementById("emptyMsg").textContent = allSeen ? "You've seen every winner for now." : "No ads clear that bar.";
+  document.getElementById("emptyHint").textContent = allSeen ? "New ones arrive with the next refresh." : "Lower the tier or the minimum days.";
   document.getElementById("srcLine").textContent =
-    `${data.total} of ${data.scanned} scanned ads clear the bar. Source: ${data.source}.`;
+    `${data.total} ads in this view, ${data.scanned} scanned in total. Source: ${data.source}.`;
   state.loading = false;
 }
 
@@ -162,7 +177,11 @@ document.getElementById("apply").onclick = () => {
   state.format = document.getElementById("format").value;
   state.minDays = +document.getElementById("minDays").value || 0;
   state.q = document.getElementById("q").value.trim();
+  state.hideSeen = document.getElementById("hideSeen").checked;
   panel.hidden = true; load(true);
+};
+document.getElementById("resetSeen").onclick = () => {
+  seen.clear(); saveSeen(); panel.hidden = true; load(true);
 };
 document.addEventListener("keydown", (e) => {
   if (e.target.matches("input, select")) return;

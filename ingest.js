@@ -32,23 +32,31 @@ const args = Object.fromEntries(
 );
 
 // Build the actor input from plain keywords, e.g. APIFY_QUERIES="sleep,collagen" APIFY_COUNTRY=US
-function apifyInputFromQueries() {
+function apifyInputsFromQueries() {
   const country = process.env.APIFY_COUNTRY || "US";
   const media = process.env.APIFY_MEDIA || "video";
   const limit = +(process.env.APIFY_LIMIT || 60);
-  const queries = (process.env.APIFY_QUERIES || "sleep,collagen,skincare").split(",").map((q) => q.trim()).filter(Boolean);
-  const urls = queries.map(
-    (q) => `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=${country}&is_targeted_country=false&media_type=${media}&q=${encodeURIComponent(q)}&search_type=keyword_unordered`
-  );
+  const all = (process.env.APIFY_QUERIES || "sleep,collagen,skincare").split(",").map((q) => q.trim()).filter(Boolean);
+  // With a long keyword list, scrape only a slice per run and rotate every 12 hours.
+  // Re-scraping the same top ads costs money and adds nothing new.
+  const perRun = Math.max(1, +(process.env.APIFY_PER_RUN || 3));
+  let queries = all;
+  if (all.length > perRun) {
+    const slot = Math.floor(Date.now() / (12 * 3600e3));
+    queries = Array.from({ length: perRun }, (_, i) => all[(slot * perRun + i) % all.length]);
+  }
   const actor = process.env.APIFY_ACTOR || "";
-  // apify/facebook-ads-scraper takes startUrls; curious_coder/facebook-ads-library-scraper takes urls.
-  if (actor.startsWith("apify~") || actor.startsWith("apify/"))
-    return { startUrls: urls.map((url) => ({ url })), resultsLimit: limit };
-  return {
-    urls: urls.map((url) => ({ url })), // this actor wants request objects, not bare strings
-    limitPerSource: limit,
-    scrapePageAds: { activeStatus: "active", sortBy: "impressions_desc", countryCode: country },
-  };
+  return queries.map((q) => {
+    const url = `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=${country}&is_targeted_country=false&media_type=${media}&q=${encodeURIComponent(q)}&search_type=keyword_unordered`;
+    // apify/facebook-ads-scraper takes startUrls; curious_coder/facebook-ads-library-scraper takes urls.
+    if (actor.startsWith("apify~") || actor.startsWith("apify/"))
+      return { startUrls: [{ url }], resultsLimit: limit };
+    return {
+      urls: [{ url }], // this actor wants request objects, not bare strings
+      limitPerSource: limit,
+      scrapePageAds: { activeStatus: "active", sortBy: "impressions_desc", countryCode: country },
+    };
+  });
 }
 
 const source = args.source || "demo";
@@ -61,12 +69,33 @@ else if (source === "graph")
     countries: (args.countries || "EE").split(","),
     active: args.status || "ACTIVE",
   });
-else if (source === "apify")
-  ads = await fromApify({
-    token: process.env.APIFY_TOKEN,
-    actor: process.env.APIFY_ACTOR,
-    input: process.env.APIFY_INPUT ? JSON.parse(process.env.APIFY_INPUT) : apifyInputFromQueries(),
-  });
+else if (source === "apify") {
+  const common = { token: process.env.APIFY_TOKEN, actor: process.env.APIFY_ACTOR };
+  if (process.env.APIFY_INPUT) {
+    ads = await fromApify({ ...common, input: JSON.parse(process.env.APIFY_INPUT) });
+  } else {
+    // One scrape per keyword. Results come back in Meta's impressions order, so a
+    // position in the list tells us how that ad ranks against others for the keyword.
+    const best = new Map();
+    let failed = 0;
+    const inputs = apifyInputsFromQueries();
+    for (const input of inputs) {
+      try {
+        const batch = await fromApify({ ...common, input });
+        batch.forEach((a, i) => {
+          a.impressionRank = batch.length > 1 ? i / (batch.length - 1) : 0;
+          const prev = best.get(a.id);
+          if (!prev || a.impressionRank < prev.impressionRank) best.set(a.id, a);
+        });
+      } catch (e) {
+        failed++;
+        console.log(`::warning title=Keyword scrape failed::${String(e.message).replace(/\r?\n/g, " ").slice(0, 400)}`);
+      }
+    }
+    if (failed === inputs.length) throw new Error("every keyword scrape failed (see warnings above)");
+    ads = [...best.values()];
+  }
+}
 else throw new Error(`unknown --source ${source}`);
 
 let existing = [];

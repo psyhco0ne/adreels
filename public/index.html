@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>AdReels</title>
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="stage">
@@ -33,14 +33,18 @@
         <label>Search
           <input type="search" id="q" placeholder="brand, niche, hook…">
         </label>
-        <button class="apply" id="apply">Apply</button>
+        <label class="check"><input type="checkbox" id="hideSeen" checked> Hide ads I've already seen</label>
+        <div class="row">
+          <button class="apply" id="apply" type="button">Apply</button>
+          <button class="apply ghost" id="resetSeen" type="button">Reset seen</button>
+        </div>
       </div>
 
       <main class="feed" id="feed" tabindex="0" aria-label="Winning ads feed"></main>
 
       <div class="empty" id="empty" hidden>
-        <p>No ads clear that bar.</p>
-        <small>Lower the tier or the minimum days.</small>
+        <p id="emptyMsg">No ads clear that bar.</p>
+        <small id="emptyHint">Lower the tier or the minimum days.</small>
       </div>
       <div class="hint" id="hint">Swipe or ↑ ↓ · M to mute</div>
     </div>
@@ -53,6 +57,6 @@
       <p id="srcLine" class="muted"></p>
     </aside>
   </div>
-  <script src="/app.js" type="module"></script>
+  <script src="app.js" type="module"></script>
 </body>
 </html>

@@ -90,3 +90,9 @@ button, select, input { font: inherit; color: inherit; }
 .hint { position: absolute; z-index: 5; left: 50%; top: 56px; transform: translateX(-50%); font-size: 12px; color: var(--muted);
   padding: 4px 10px; border-radius: 99px; background: #0008; transition: opacity 0.6s; pointer-events: none; }
 .hint.gone { opacity: 0; }
+
+.panel .check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--fg); }
+.panel .row { display: flex; gap: 8px; }
+.panel .row .apply { flex: 1; }
+.apply.ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); }
+.empty button { justify-self: center; margin-top: 8px; padding: 9px 14px; border-radius: 10px; border: 0; background: var(--accent); color: #000; font-weight: 700; cursor: pointer; }
